@@ -20,20 +20,25 @@ jobs:
     - name: 3. Configurar Gestor de Paquetes NuGet
       uses: NuGet/setup-nuget@v1.2.0
 
-    - name: 4. Buscar y Restaurar Paquetes de la Solucion
+    - name: 4. Buscar y Restaurar Paquetes NuGet
       run: |
-        $slnPath = Get-ChildItem -Filter "*.sln" -Recurse | Select-Object -First 1 -ExpandProperty FullName
-        Write-Host "Solucion encontrada en: $slnPath"
-        nuget restore $slnPath
+        $csprojFiles = Get-ChildItem -Filter "*.csproj" -Recurse
+        foreach ($file in $csprojFiles) {
+            Write-Host "Restaurando paquetes para: $($file.FullName)"
+            nuget restore $file.FullName
+        }
       shell: powershell
 
     - name: 5. Instalar Motor de Pruebas via NuGet
       run: nuget install Microsoft.TestPlatform -Version 17.8.0 -OutputDirectory Packages_Test
 
-    - name: 6. Compilar Solucion Completa
+    - name: 6. Compilar Proyectos en Limpio
       run: |
-        $slnPath = Get-ChildItem -Filter "*.sln" -Recurse | Select-Object -First 1 -ExpandProperty FullName
-        msbuild $slnPath /p:Configuration=Debug /p:Platform="Any CPU"
+        $csprojFiles = Get-ChildItem -Filter "*.csproj" -Recurse
+        foreach ($file in $csprojFiles) {
+            Write-Host "Compilando proyecto: $($file.FullName)"
+            msbuild $file.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+        }
       shell: powershell
 
     - name: 7. Ejecutar Pruebas Unitarias Automatizadas

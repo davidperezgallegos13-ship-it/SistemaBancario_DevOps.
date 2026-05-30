@@ -14,7 +14,7 @@ jobs:
     - name: 1. Descargar Codigo de C#
       uses: actions/checkout@v4
 
-    - name: 2. Configurar Entorno MSBuild (Herramientas de Windows)
+    - name: 2. Configurar Entorno MSBuild
       uses: microsoft/setup-msbuild@v2
 
     - name: 3. Configurar Gestor de Paquetes NuGet
@@ -23,8 +23,14 @@ jobs:
     - name: 4. Restaurar Dependencias de la Solucion
       run: nuget restore SistemaBancario.sln
 
-    - name: 5. Compilar Solucion de Formularios y Clases
+    - name: 5. Instalar Plataforma de Pruebas Microsoft via NuGet
+      run: nuget install Microsoft.TestPlatform -Version 17.8.0 -OutputDirectory Packages_Test
+
+    - name: 6. Compilar Solucion de Formularios y Clases
       run: msbuild SistemaBancario.sln /p:Configuration=Debug
 
-    - name: 6. Ejecutar Pruebas Unitarias Automatizadas
-      run: msbuild SistemaBancario.sln /t:VSTest /p:Configuration=Debug
+    - name: 7. Ejecutar Pruebas Unitarias Automatizadas
+      run: |
+        $vstestPath = Get-ChildItem -Path "Packages_Test" -Filter "vstest.console.exe" -Recurse | Select-Object -First 1 -ExpandProperty FullName
+        & $vstestPath SistemaBancario.Test\bin\Debug\SistemaBancario.Test.dll
+      shell: powershell

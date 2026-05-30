@@ -11,23 +11,20 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: 1. Descargar Codigo
+    - name: 1. Descargar Codigo de C#
       uses: actions/checkout@v4
 
-    - name: 2. Configurar MSBuild
+    - name: 2. Configurar Entorno MSBuild (Herramientas de Windows)
       uses: microsoft/setup-msbuild@v2
 
-    - name: 3. Configurar NuGet
+    - name: 3. Configurar Gestor de Paquetes NuGet
       uses: NuGet/setup-nuget@v1.2.0
 
-    - name: 4. Configurar Motor de Pruebas
-      uses: microsoft/setup-vstest@v1.0.5
-
-    - name: 5. Restaurar Paquetes NuGet
+    - name: 4. Restaurar Dependencias de la Solucion
       run: nuget restore SistemaBancario.sln
 
-    - name: 6. Compilar Solucion Completa
+    - name: 5. Compilar Solucion de Formularios y Clases
       run: msbuild SistemaBancario.sln /p:Configuration=Debug
 
-    - name: 7. Ejecutar Pruebas Unitarias
-      run: vstest.console.exe SistemaBancario.Test\bin\Debug\SistemaBancario.Test.dll
+    - name: 6. Ejecutar Pruebas Unitarias Automatizadas
+      run: msbuild SistemaBancario.sln /t:VSTest /p:Configuration=Debug

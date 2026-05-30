@@ -42,5 +42,5 @@ jobs:
     - name: 7. Ejecutar Pruebas Unitarias Automatizadas
       run: |
         $vstestPath = Get-ChildItem -Path "Packages_Test" -Filter "vstest.console.exe" -Recurse | Select-Object -First 1 -ExpandProperty FullName
-        & $vstestPath "SistemaBancario.Test\bin\Debug\SistemaBancario.Test.dll" /Platform:x64
+        & $vstestPath "bin\Debug\SistemaBancario.Test.dll" /Platform:x64
       shell: powershell

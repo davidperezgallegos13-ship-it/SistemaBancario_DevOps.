@@ -24,7 +24,6 @@ jobs:
       run: |
         $csprojFiles = Get-ChildItem -Filter "*.csproj" -Recurse
         foreach ($file in $csprojFiles) {
-            Write-Host "Restaurando paquetes para: $($file.FullName)"
             nuget restore $file.FullName
         }
       shell: powershell
@@ -32,12 +31,13 @@ jobs:
     - name: 5. Instalar Motor de Pruebas via NuGet
       run: nuget install Microsoft.TestPlatform -Version 17.8.0 -OutputDirectory Packages_Test
 
-    - name: 6. Compilar Proyectos en Limpio
+    - name: 6. Compilar Proyectos con Rutas Explicitas
       run: |
         $csprojFiles = Get-ChildItem -Filter "*.csproj" -Recurse
         foreach ($file in $csprojFiles) {
-            Write-Host "Compilando proyecto: $($file.FullName)"
-            msbuild $file.FullName /p:Configuration=Debug /p:Platform="Any CPU"
+            $projectName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+            Write-Host "Compilando: $($file.FullName)"
+            msbuild $file.FullName /p:Configuration=Debug /p:Platform="AnyCPU" /p:OutputPath="bin\Debug\" /p:BaseOutputPath="obj\"
         }
       shell: powershell
 
@@ -45,6 +45,5 @@ jobs:
       run: |
         $dllPath = Get-ChildItem -Path ".*" -Filter "*Test*.dll" -Recurse | Where-Object { $_.FullName -like "*bin\Debug*" } | Select-Object -First 1 -ExpandProperty FullName
         $vstestPath = Get-ChildItem -Path "Packages_Test" -Filter "vstest.console.exe" -Recurse | Select-Object -First 1 -ExpandProperty FullName
-        Write-Host "Ejecutando pruebas sobre: $dllPath"
         & $vstestPath $dllPath
       shell: powershell

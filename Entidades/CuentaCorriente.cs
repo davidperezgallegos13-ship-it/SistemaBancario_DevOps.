@@ -13,17 +13,15 @@ namespace SistemaBancario.Entidades
 
         public override void PagarInteres()
         {
-           
             if (Saldo >= 100)
             {
                 Saldo += Saldo * 0.09;
-                PagoInteres = true; 
+                PagoInteres = true;
             }
         }
 
         public override bool Retirar(double cantidad)
         {
-           
             if (cantidad <= Saldo && (Saldo - cantidad) >= 100)
             {
                 Saldo -= cantidad;

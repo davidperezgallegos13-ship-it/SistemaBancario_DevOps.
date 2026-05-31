@@ -45,18 +45,4 @@ namespace SistemaBancario.Entidades
         {
         }
     }
-
-    public class CuentaAhorro : Cuenta
-    {
-        public override bool AperturaCuenta() => Saldo >= 100;
-
-        public override void PagarInteres()
-        {
-            if (Saldo >= 10)
-            {
-                Saldo += Saldo * 0.05;
-                PagoInteres = true;
-            }
-        }
-    }
 }

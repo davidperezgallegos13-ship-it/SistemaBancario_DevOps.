@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Controlador\ControladorCuenta.cs" />
     <Compile Include="Entidades\Cuenta.cs" />
+    <Compile Include="Entidades\CuentaAhorro.cs" />
     <Compile Include="Entidades\CuentaCorriente.cs" />
     <Compile Include="Formularios\BancoEstudiantil.cs">
       <SubType>Form</SubType>

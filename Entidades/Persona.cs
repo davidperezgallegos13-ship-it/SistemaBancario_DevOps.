@@ -8,22 +8,15 @@ namespace SistemaBancario
 {
     public class Persona
     {
-
         public string Cedula { get; set; }
-
         public string Nombre { get; set; }
-
         public string Direccion { get; set; }
-
         public string Telefono { get; set; }
-
         public int Edad { get; set; }
 
         public string NombreCompleto()
         {
             return Nombre;
         }
-
-      
     }
 }

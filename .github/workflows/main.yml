@@ -20,15 +20,19 @@ jobs:
     - name: 3. Configurar Gestor de Paquetes NuGet
       uses: NuGet/setup-nuget@v1.2.0
 
-    - name: 4. Restaurar Paquetes NuGet de la Solucion Completas
-      run: nuget restore
+    - name: 4. Restaurar Paquetes NuGet
+      run: |
+        nuget restore SistemaBancario.csproj
+        nuget restore SistemaBancario.Test.csproj
       shell: powershell
 
     - name: 5. Instalar Motor de Pruebas via NuGet
       run: nuget install Microsoft.TestPlatform -Version 17.8.0 -OutputDirectory Packages_Test
 
-    - name: 6. Compilar Solucion Completa (App y Pruebas)
-      run: msbuild /p:Configuration=Debug /p:Platform="AnyCPU"
+    - name: 6. Compilar Proyectos Individualmente
+      run: |
+        msbuild SistemaBancario.csproj /p:Configuration=Debug
+        msbuild SistemaBancario.Test.csproj /p:Configuration=Debug
       shell: powershell
 
     - name: 7. Ejecutar Pruebas Automatizadas
